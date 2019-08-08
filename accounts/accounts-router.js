@@ -30,8 +30,19 @@ router.get('/:id', async (req, res) => {
       res.status(404).json({message: `account with id ${id} not found`});
     }
   } catch (err) {
-    res.status(500).json({message: 'error retrieving the account'});
+    res.status(500).json({message: 'error retrieving the account', error: err});
   }
 });
+
+router.post('/', async (req, res) => {
+  const newAccount = req.body;
+  try {
+    const [accountId] = await db('accounts').insert(newAccount);
+    res.status(201).json({id: accountId});
+  } catch (err) {
+    res.status(500).json({message: 'error adding the account', error: err});
+  }
+});
+
 
 module.exports = router;
